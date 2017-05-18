@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SSR</title>
+</head>
+<body>
+  Server Side Render
+  <div>
+    <input type="text" id="msg" value="">
+    <button id="trigger">Trigger</button>
+  </div>
+
+  <div>
+    <input type="text" id="userid" value="" placeholder="ID">
+    <input type="text" id="msg2" value="" placeholder="Message">
+    <button id="trigger2">Trigger</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+  <script type="text/javascript">
+    var io = io.connect()
+    let id = Math.floor(Math.random() * 100000 )
+    io.emit('set socket id', id)
+    console.log(id)
+
+    let triggerBtn = document.body.querySelector('#trigger'),
+        msgInput = document.body.querySelector('#msg')
+
+    let triggerBtn2 = document.body.querySelector('#trigger2'),
+        msgInput2 = document.body.querySelector('#msg2'),
+        useridInput = document.body.querySelector('#userid')
+
+    triggerBtn.addEventListener('click', (e) => {
+      io.emit('post msg', msgInput.value)
+    })
+
+    triggerBtn2.addEventListener('click', (e) => {
+      io.emit('private msg', {
+        id: +useridInput.value,
+        msg: msgInput2.value
+      })
+    })
+
+    io.on('global msg', (res) => {
+      console.log(res.data)
+    })
+    io.on('private msg', (res) => {
+      console.log(res)
+    })
+
+  </script>
+</body>
+</html>

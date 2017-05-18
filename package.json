@@ -1,0 +1,13 @@
+{
+  "name": "socket",
+  "version": "1.0.0",
+  "description": "a socket test server",
+  "main": "index.js",
+  "author": "Dolphin",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-router": "^7.1.1",
+    "socket.io": "^2.0.1"
+  }
+}

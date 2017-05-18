@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Socket Test</title>
+</head>
+<body>
+  <div>
+    <button id="changeChannel" data-channel="0">
+      Channel 1
+    </button>
+    <button id="changeChannel" data-channel="1">
+      Channel 2
+    </button>
+  </div>
+  <input type="text" id="msg" value="">
+  <button type="button" id="sendMsg">Msg</button>
+  <div class="msgBox">
+    <ul>
+
+    </ul>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+  <script>
+    var socket = io.connect()
+    let btn = document.body.querySelector('#sendMsg'),
+        msg = document.body.querySelector('#msg'),
+        msgBox = document.body.querySelector('.msgBox > ul'),
+        channelBtn = document.body.querySelectorAll('#changeChannel')
+
+    let channel = 0 // default room
+    console.log(msgBox)
+    btn.addEventListener('click', (e) => {
+      console.log(msg.value)
+      socket.emit('message', msg.value)
+    })
+    msg.addEventListener('keydown', (e) => {
+      if (e.keyCode === 13) {
+        socket.emit('message', msg.value)
+      }
+    })
+    channelBtn.forEach((b) => {
+      b.addEventListener('click', (e) => {
+        channel = e.target.dataset.channel
+        socket.emit('change channel', channel)
+      })
+    })
+    socket.on('msg', (msg) => {
+      let liDom = document.createElement('li'),
+          textDom = document.createTextNode(msg.data)
+      liDom.appendChild(textDom)
+
+      msgBox.appendChild(liDom)
+      console.log(msg)
+    })
+  </script>
+</body>
+</html>
